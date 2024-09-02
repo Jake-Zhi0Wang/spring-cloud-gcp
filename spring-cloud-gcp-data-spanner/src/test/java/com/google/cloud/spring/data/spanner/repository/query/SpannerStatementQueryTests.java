@@ -120,14 +120,14 @@ class SpannerStatementQueryTests {
             invocation -> {
               Statement statement = invocation.getArgument(1);
 
-              String actualSql = statement.getSql().trim();
+              String actualSql = statement.getSql();
 
-              assertThat(actualSql).startsWith("SELECT DISTINCT");
+              assertThat(actualSql.trim()).startsWith("SELECT DISTINCT");
 
               String actualSelectClause = actualSql.substring(
                   actualSql.indexOf("SELECT DISTINCT") + "SELECT DISTINCT".length(), 
                   actualSql.indexOf("FROM trades")
-              );
+              ).trim();
 
               String expectedSelectClause = "shares, trader_id, ticker, price, action, id, value";
 
@@ -136,7 +136,7 @@ class SpannerStatementQueryTests {
 
               assertThat(actualSelectFields).isEqualTo(expectedSelectFields);
 
-              String actualWhereAndOrderClause = actualSql.substring(actualSql.indexOf("FROM trades"));
+              String actualWhereAndOrderClause = actualSql.substring(actualSql.indexOf("FROM trades")).trim();
               String expectedWhereAndOrderClause = "FROM trades WHERE ( LOWER(action)=LOWER(@tag0) AND ticker=@tag1 ) OR ("
                                     + " trader_id=@tag2 AND price<@tag3 ) OR ( price>=@tag4 AND id IS NOT NULL AND"
                                     + " trader_id=NULL AND trader_id LIKE @tag7 AND price=TRUE AND price=FALSE"
