@@ -120,14 +120,14 @@ class SpannerStatementQueryTests {
             invocation -> {
               Statement statement = invocation.getArgument(1);
 
-              String actualSql = statement.getSql();
+              String actualSql = statement.getSql().trim();
 
-              assertThat(actualSql.trim()).startsWith("SELECT DISTINCT");
+              assertThat(actualSql).startsWith("SELECT DISTINCT");
 
               String actualSelectClause = actualSql.substring(
                   actualSql.indexOf("SELECT DISTINCT") + "SELECT DISTINCT".length(), 
                   actualSql.indexOf("FROM trades")
-              ).trim();
+              );
 
               String expectedSelectClause = "shares, trader_id, ticker, price, action, id, value";
 
